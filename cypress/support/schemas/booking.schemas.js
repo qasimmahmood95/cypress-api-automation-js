@@ -1,12 +1,14 @@
 /**
  * JSON Schemas describing the Restful Booker API contracts.
  * Used with cy.request(...).validateSchema(schema) to catch breaking
- * contract changes, not just wrong values.
+ * contract changes, not just wrong values. `additionalProperties: false`
+ * makes renamed or unexpected response fields fail loudly.
  */
 
 export const bookingSchema = {
   type: 'object',
   required: ['firstname', 'lastname', 'totalprice', 'depositpaid', 'bookingdates'],
+  additionalProperties: false,
   properties: {
     firstname: { type: 'string' },
     lastname: { type: 'string' },
@@ -15,6 +17,7 @@ export const bookingSchema = {
     bookingdates: {
       type: 'object',
       required: ['checkin', 'checkout'],
+      additionalProperties: false,
       properties: {
         checkin: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
         checkout: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
@@ -27,6 +30,7 @@ export const bookingSchema = {
 export const createBookingResponseSchema = {
   type: 'object',
   required: ['bookingid', 'booking'],
+  additionalProperties: false,
   properties: {
     bookingid: { type: 'number' },
     booking: bookingSchema,
@@ -38,6 +42,7 @@ export const bookingIdListSchema = {
   items: {
     type: 'object',
     required: ['bookingid'],
+    additionalProperties: false,
     properties: {
       bookingid: { type: 'number' },
     },
@@ -47,6 +52,7 @@ export const bookingIdListSchema = {
 export const authTokenSchema = {
   type: 'object',
   required: ['token'],
+  additionalProperties: false,
   properties: {
     token: { type: 'string', minLength: 1 },
   },

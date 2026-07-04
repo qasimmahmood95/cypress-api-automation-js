@@ -12,7 +12,7 @@ A production-grade API test automation framework built with **Cypress** and **Ja
 - **Contract testing with JSON Schema** — responses are validated structurally with [Ajv](https://ajv.js.org/) through a chainable custom command: `cy.request(...).validateSchema(bookingSchema)`. Catches breaking API changes that value assertions miss.
 - **Randomized test data builders** — booking payloads are generated with [Faker](https://fakerjs.dev/) via a fluent builder (`new BookingBuilder().withFirstName('Updated').build()`), so tests never collide on shared static data and every field a test asserts on is pinned explicitly.
 - **Independent, feature-scoped specs** — each test creates the data it needs; there is no ordering coupling. Specs are grouped by feature (`health/`, `auth/`, `booking/`) with dedicated positive and negative suites.
-- **CI/CD with GitHub Actions** — linting, format checks, and the full API suite run on every push/PR plus a nightly scheduled regression. The mochawesome HTML report is uploaded as a build artifact on every run, pass or fail.
+- **CI/CD with GitHub Actions** — linting, format checks, and the full API suite run on every push to `main` and every pull request, plus a nightly scheduled regression. The mochawesome HTML report is uploaded as a build artifact on every run, pass or fail.
 - **Resilience against a flaky public API** — test retries are enabled for headless runs only (`retries: { runMode: 2, openMode: 0 }`), so local debugging still surfaces failures immediately.
 
 ## Project structure
@@ -31,8 +31,10 @@ A production-grade API test automation framework built with **Cypress** and **Ja
 │       ├── schemas/                # JSON Schema API contracts
 │       ├── utils/                  # Ajv schema validator
 │       ├── commands.js             # cy.validateSchema custom command
+│       ├── constants.js            # Named HTTP status codes
 │       └── e2e.js                  # Support entry point
 ├── cypress.config.js               # Base URL, retries, env, reporter
+├── cypress.env.json.example        # Template for local env overrides
 └── eslint.config.mjs               # ESLint flat config + Cypress plugin
 ```
 
@@ -49,7 +51,7 @@ Where the demo API deviates from REST conventions (e.g. `201` on successful DELE
 
 ## Getting started
 
-**Prerequisites:** Node.js ≥ 18 (see `.nvmrc`)
+**Prerequisites:** Node.js 22 (pinned in `.nvmrc`); anything ≥ 18 works
 
 ```bash
 git clone https://github.com/qasimmahmood95/cypress-api-automation-js.git
@@ -63,11 +65,14 @@ npm test
 | Command                | What it does                                 |
 | ---------------------- | -------------------------------------------- |
 | `npm test`             | Run the full API suite headlessly            |
+| `npm run test:chrome`  | Full suite in Chrome                         |
 | `npm run test:smoke`   | Health-check suite only                      |
 | `npm run test:auth`    | Auth suite only                              |
 | `npm run test:booking` | Booking CRUD + negative suites               |
 | `npm run cy:open`      | Open the Cypress runner for interactive runs |
 | `npm run lint`         | ESLint (with Cypress plugin)                 |
+| `npm run lint:fix`     | ESLint with autofix                          |
+| `npm run format`       | Prettier write                               |
 | `npm run format:check` | Prettier check (CI-enforced)                 |
 
 ### Configuration
@@ -78,11 +83,11 @@ npm test
 | API username | `admin` (public demo credential)       | `CYPRESS_apiUsername`           |
 | API password | `password123` (public demo credential) | `CYPRESS_apiPassword`           |
 
-Secrets never belong in the repo — the defaults here are the API's published demo credentials; real environments should inject credentials via environment variables or a git-ignored `cypress.env.json`.
+Secrets never belong in the repo — the defaults here are the API's published demo credentials; real environments should inject credentials via environment variables or a git-ignored `cypress.env.json` (copy `cypress.env.json.example` to get started).
 
 ## Reporting
 
-Every headless run generates a self-contained HTML report at `cypress/reports/index.html` via [cypress-mochawesome-reporter](https://github.com/LironEr/cypress-mochawesome-reporter), with per-test request context and charts. In CI the report is uploaded as the `mochawesome-report` artifact on every run — including failures, which is when you need it most.
+Every headless run generates a self-contained HTML report (pass/fail charts, per-test timings and error detail) at `cypress/reports/index.html` via [cypress-mochawesome-reporter](https://github.com/LironEr/cypress-mochawesome-reporter). In CI the report is uploaded as the `mochawesome-report` artifact on every run — including failures, which is when you need it most.
 
 ## Design decisions
 

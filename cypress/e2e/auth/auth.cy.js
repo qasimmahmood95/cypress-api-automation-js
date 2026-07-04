@@ -1,5 +1,6 @@
 import authService from '../../support/api/auth.service';
 import { authTokenSchema } from '../../support/schemas/booking.schemas';
+import { STATUS } from '../../support/constants';
 import invalidCredentials from '../../fixtures/invalid-credentials.json';
 
 describe('Auth API', () => {
@@ -8,7 +9,7 @@ describe('Auth API', () => {
       .createToken()
       .validateSchema(authTokenSchema)
       .then((response) => {
-        expect(response.status).to.eq(200);
+        expect(response.status).to.eq(STATUS.OK);
         expect(response.body.token).to.be.a('string').and.not.be.empty;
       });
   });
@@ -17,7 +18,7 @@ describe('Auth API', () => {
     // Quirk of the demo API: bad credentials return HTTP 200 with a
     // reason in the body rather than a 401
     authService.createToken(invalidCredentials).then((response) => {
-      expect(response.status).to.eq(200);
+      expect(response.status).to.eq(STATUS.OK);
       expect(response.body).to.deep.equal({ reason: 'Bad credentials' });
     });
   });
