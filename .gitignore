@@ -1,4 +1,17 @@
+# Dependencies
 node_modules/
-package-lock.json
-cypress/screenshots
-cypress/videos
+
+# Cypress artifacts
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+cypress/reports/
+
+# Environment overrides
+cypress.env.json
+.env
+
+# IDE / OS noise
+.idea/
+.vscode/
+.DS_Store
