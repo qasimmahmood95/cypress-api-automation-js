@@ -11,7 +11,8 @@ import {
 describe('Booking API — CRUD', () => {
   let token;
 
-  before(() => {
+  // beforeEach (not before) so each retry starts from a fresh token
+  beforeEach(() => {
     authService.getToken().then((authToken) => {
       token = authToken;
     });
