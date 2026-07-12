@@ -1,17 +1,45 @@
 {
   "name": "cypress-api-automation",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "cypress run --headless"
+  "version": "2.0.0",
+  "description": "Production-grade API test automation framework for the Restful Booker API, built with Cypress and JavaScript",
+  "author": "Qasim Mahmood",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qasimmahmood95/cypress-api-automation-js.git"
   },
-  "author": "",
+  "keywords": [
+    "cypress",
+    "api-testing",
+    "test-automation",
+    "javascript",
+    "restful-booker",
+    "sdet"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "cypress run",
+    "test:chrome": "cypress run --browser chrome",
+    "test:smoke": "cypress run --spec cypress/e2e/health/*.cy.js",
+    "test:auth": "cypress run --spec cypress/e2e/auth/*.cy.js",
+    "test:booking": "cypress run --spec cypress/e2e/booking/*.cy.js",
+    "cy:open": "cypress open",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@faker-js/faker": "^9.0.0",
+    "ajv": "^8.17.1",
     "cypress": "^13.14.1",
+    "cypress-mochawesome-reporter": "^3.8.2",
     "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-cypress": "^3.5.0",
     "globals": "^15.9.0",
     "prettier": "3.3.3"
   }
